@@ -4,6 +4,8 @@ const express = require('express')
 const session = require('express-session')
 // 載入express-handlebars
 const exphbs = require('express-handlebars')
+// 載入 possport 設定檔，要寫在 express-session 之後
+const usePassport = require('./config/passport')
 // 載入 Todo model
 const Todo = require('./models/todo')
 // 載入 method-overrite
@@ -36,6 +38,8 @@ app.use(session({
   resave: false,
   saveUninitialized: true
 }))
+
+usePassport(app)
 
 // 用 app.use 規定每一筆請求都需要透過 body-parser 進行前置處理
 app.use(bodyParser.urlencoded({ extended: true }))
