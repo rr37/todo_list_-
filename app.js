@@ -1,15 +1,12 @@
-// 載入 express 並建構應用程式伺服器
 const express = require('express')
-// 載入express-session
 const session = require('express-session')
-// 載入express-handlebars
 const exphbs = require('express-handlebars')
 // 載入 possport 設定檔，要寫在 express-session 之後
 const usePassport = require('./config/passport')
 // 載入 Todo model
 const Todo = require('./models/todo')
-// 載入 method-overrite
 const methodOverride = require('method-override')
+const flash = require('connect-flash')
 
 // 引用 body-parser
 const bodyParser = require('body-parser')
@@ -46,10 +43,13 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(methodOverride('_method'))
 
 usePassport(app)
-
+app.use(flash())
 app.use((req, res, next) => {
   res.locals.isAuthenticated = req.isAuthenticated
   res.locals.user = req.user
+  res.locals.success_msg = req.flash('success_msg')
+  res.locals.warning_msg = req.flash('warning_msg')
+  res.locals.error = req.flash('error')
   next()
 })
 
